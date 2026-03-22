@@ -62,3 +62,9 @@ Run services from IntelliJ in workflow order:
 - Show producer/consumer Kafka patterns
 - Persist service-owned state in PostgreSQL
 - Provide a practical portfolio project for interviews
+
+## CI
+
+This repository includes a GitHub Actions workflow at [.github/workflows/ci.yml](C:/dev/healthcare-platform/.github/workflows/ci.yml) that runs Maven tests for each service on pushes and pull requests.
+
+For interview preparation, see [docs/ci-cd-interview-guide.md](C:/dev/healthcare-platform/docs/ci-cd-interview-guide.md).

@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - services/claim-intake-service
+          - services/claim-validation-service
+          - services/eligibility-service
+          - services/fraud-check-service
+          - services/adjudication-service
+          - services/payment-service
+          - services/notification-service
+          - services/audit-service
+          - services/patient-rest-service
+          - services/clinic-soap-service
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Run Maven tests
+        working-directory: ${{ matrix.service }}
+        run: mvn -B clean test
