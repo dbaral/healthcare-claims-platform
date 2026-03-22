@@ -1,0 +1,161 @@
+services:
+  claims-postgres:
+    image: postgres:17
+    container_name: claims-postgres
+    environment:
+      POSTGRES_DB: claimsdb
+      POSTGRES_USER: claims
+      POSTGRES_PASSWORD: claimspw
+    ports:
+      - "5433:5432"
+    volumes:
+      - claims-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U claims -d claimsdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  claim-validation-postgres:
+    image: postgres:17
+    container_name: claim-validation-postgres
+    environment:
+      POSTGRES_DB: claimvalidationdb
+      POSTGRES_USER: claimvalidation
+      POSTGRES_PASSWORD: claimvalidationpw
+    ports:
+      - "5434:5432"
+    volumes:
+      - claim-validation-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U claimvalidation -d claimvalidationdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  payment-postgres:
+    image: postgres:17
+    container_name: payment-postgres
+    environment:
+      POSTGRES_DB: paymentdb
+      POSTGRES_USER: payment
+      POSTGRES_PASSWORD: paymentpw
+    ports:
+      - "5435:5432"
+    volumes:
+      - payment-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payment -d paymentdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  notification-postgres:
+    image: postgres:17
+    container_name: notification-postgres
+    environment:
+      POSTGRES_DB: notificationdb
+      POSTGRES_USER: notification
+      POSTGRES_PASSWORD: notificationpw
+    ports:
+      - "5436:5432"
+    volumes:
+      - notification-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notification -d notificationdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  audit-postgres:
+    image: postgres:17
+    container_name: audit-postgres
+    environment:
+      POSTGRES_DB: auditdb
+      POSTGRES_USER: audit
+      POSTGRES_PASSWORD: auditpw
+    ports:
+      - "5437:5432"
+    volumes:
+      - audit-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U audit -d auditdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mysql:
+    image: mysql:8.4
+    container_name: clinic-mysql
+    environment:
+      MYSQL_DATABASE: clinic
+      MYSQL_USER: clinic
+      MYSQL_PASSWORD: clinicpw
+      MYSQL_ROOT_PASSWORD: rootpw
+    ports:
+      - "3306:3306"
+
+  patient-mysql:
+    image: mysql:8.4
+    container_name: patient-mysql
+    environment:
+      MYSQL_DATABASE: patientdb
+      MYSQL_USER: patient
+      MYSQL_PASSWORD: patientpw
+      MYSQL_ROOT_PASSWORD: rootpw
+    ports:
+      - "3307:3306"
+    volumes:
+      - patient-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpw"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.8.0
+    container_name: healthcare-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: healthcare-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: healthcare-kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - "8085:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: healthcare-platform
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+
+volumes:
+  claims-postgres-data:
+  claim-validation-postgres-data:
+  payment-postgres-data:
+  notification-postgres-data:
+  audit-postgres-data:
+  patient-mysql-data:

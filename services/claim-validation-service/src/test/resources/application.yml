@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:claimvalidation;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: claim-validation-service-test
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: com.debish.health.claimvalidation.application.event
+        spring.json.value.default.type: com.debish.health.claimvalidation.application.event.ClaimSubmittedEvent
+        spring.json.use.type.headers: false
+
+app:
+  kafka:
+    topics:
+      claim-submitted: claim-submitted
+      claim-validated: claim-validated
+      claim-validation-failed: claim-validation-failed
