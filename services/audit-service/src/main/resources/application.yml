@@ -1,0 +1,42 @@
+server:
+  port: 8098
+
+spring:
+  application:
+    name: audit-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5437}/${DB_NAME:auditdb}
+    username: ${DB_USERNAME:audit}
+    password: ${DB_PASSWORD:auditpw}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: audit-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+app:
+  kafka:
+    topics:
+      claim-submitted: claim-submitted
+      claim-validated: claim-validated
+      claim-validation-failed: claim-validation-failed
+      member-eligible: member-eligible
+      member-ineligible: member-ineligible
+      claim-fraud-cleared: claim-fraud-cleared
+      claim-fraud-flagged: claim-fraud-flagged
+      claim-adjudicated: claim-adjudicated
+      payment-processed: payment-processed
+      claim-notification-sent: claim-notification-sent

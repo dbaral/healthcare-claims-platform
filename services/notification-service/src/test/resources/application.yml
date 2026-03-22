@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:notificationdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-service-test
+      auto-offset-reset: earliest
+
+app:
+  kafka:
+    topics:
+      payment-processed: payment-processed
+      claim-validation-failed: claim-validation-failed
+      member-ineligible: member-ineligible
+      claim-fraud-flagged: claim-fraud-flagged
+      claim-adjudicated: claim-adjudicated
+      claim-notification-sent: claim-notification-sent

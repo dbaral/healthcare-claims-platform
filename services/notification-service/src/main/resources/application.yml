@@ -1,0 +1,43 @@
+server:
+  port: 8097
+
+spring:
+  application:
+    name: notification-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5436}/${DB_NAME:notificationdb}
+    username: ${DB_USERNAME:notification}
+    password: ${DB_PASSWORD:notificationpw}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: notification-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+app:
+  kafka:
+    topics:
+      payment-processed: payment-processed
+      claim-validation-failed: claim-validation-failed
+      member-ineligible: member-ineligible
+      claim-fraud-flagged: claim-fraud-flagged
+      claim-adjudicated: claim-adjudicated
+      claim-notification-sent: claim-notification-sent
