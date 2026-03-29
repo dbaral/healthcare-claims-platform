@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eligibility-service
+  namespace: healthcare-claims
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eligibility-service
+  template:
+    metadata:
+      labels:
+        app: eligibility-service
+    spec:
+      containers:
+        - name: eligibility-service
+          image: healthcare/eligibility-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8093
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eligibility-service
+  namespace: healthcare-claims
+spec:
+  selector:
+    app: eligibility-service
+  ports:
+    - port: 8093
+      targetPort: 8093

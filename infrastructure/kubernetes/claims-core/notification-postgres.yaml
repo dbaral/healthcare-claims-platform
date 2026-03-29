@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-postgres
+  namespace: healthcare-claims
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-postgres
+  template:
+    metadata:
+      labels:
+        app: notification-postgres
+    spec:
+      containers:
+        - name: notification-postgres
+          image: postgres:17
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: NOTIFICATION_DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: NOTIFICATION_DB_USERNAME
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: NOTIFICATION_DB_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-postgres
+  namespace: healthcare-claims
+spec:
+  selector:
+    app: notification-postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

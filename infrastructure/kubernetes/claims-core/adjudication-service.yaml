@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adjudication-service
+  namespace: healthcare-claims
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adjudication-service
+  template:
+    metadata:
+      labels:
+        app: adjudication-service
+    spec:
+      containers:
+        - name: adjudication-service
+          image: healthcare/adjudication-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8095
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adjudication-service
+  namespace: healthcare-claims
+spec:
+  selector:
+    app: adjudication-service
+  ports:
+    - port: 8095
+      targetPort: 8095

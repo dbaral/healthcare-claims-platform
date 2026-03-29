@@ -44,6 +44,9 @@ Start infrastructure:
 docker compose up -d zookeeper kafka kafka-ui claims-postgres claim-validation-postgres payment-postgres notification-postgres audit-postgres
 ```
 
+## Infrastructure
+
+Deployment-oriented assets live under [infrastructure/README.md](C:/dev/healthcare-platform/infrastructure/README.md), including Docker build docs and starter Kubernetes manifests for the core claims workflow.
 Run services from IntelliJ in workflow order:
 
 1. `audit-service`

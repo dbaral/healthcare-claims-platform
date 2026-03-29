@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-check-service
+  namespace: healthcare-claims
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud-check-service
+  template:
+    metadata:
+      labels:
+        app: fraud-check-service
+    spec:
+      containers:
+        - name: fraud-check-service
+          image: healthcare/fraud-check-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8094
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fraud-check-service
+  namespace: healthcare-claims
+spec:
+  selector:
+    app: fraud-check-service
+  ports:
+    - port: 8094
+      targetPort: 8094

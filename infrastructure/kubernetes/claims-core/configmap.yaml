@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: claims-platform-config
+  namespace: healthcare-claims
+data:
+  KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+  CLAIMS_DB_HOST: claims-postgres
+  CLAIMS_DB_PORT: "5432"
+  CLAIMS_DB_NAME: claimsdb
+  CLAIM_VALIDATION_DB_HOST: claim-validation-postgres
+  CLAIM_VALIDATION_DB_PORT: "5432"
+  CLAIM_VALIDATION_DB_NAME: claimvalidationdb
+  PAYMENT_DB_HOST: payment-postgres
+  PAYMENT_DB_PORT: "5432"
+  PAYMENT_DB_NAME: paymentdb
+  NOTIFICATION_DB_HOST: notification-postgres
+  NOTIFICATION_DB_PORT: "5432"
+  NOTIFICATION_DB_NAME: notificationdb
+  AUDIT_DB_HOST: audit-postgres
+  AUDIT_DB_PORT: "5432"
+  AUDIT_DB_NAME: auditdb
