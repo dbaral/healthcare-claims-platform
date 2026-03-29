@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claim-intake-service
+  namespace: healthcare-claims
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claim-intake-service
+  template:
+    metadata:
+      labels:
+        app: claim-intake-service
+    spec:
+      containers:
+        - name: claim-intake-service
+          image: healthcare/claim-intake-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8091
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: CLAIMS_DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: CLAIMS_DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: CLAIMS_DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: CLAIMS_DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: CLAIMS_DB_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claim-intake-service
+  namespace: healthcare-claims
+spec:
+  selector:
+    app: claim-intake-service
+  ports:
+    - port: 8091
+      targetPort: 8091

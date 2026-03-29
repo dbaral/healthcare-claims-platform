@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-service
+  namespace: healthcare-claims
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: audit-service
+  template:
+    metadata:
+      labels:
+        app: audit-service
+    spec:
+      containers:
+        - name: audit-service
+          image: healthcare/audit-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8098
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: AUDIT_DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: AUDIT_DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: AUDIT_DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: AUDIT_DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: AUDIT_DB_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audit-service
+  namespace: healthcare-claims
+spec:
+  selector:
+    app: audit-service
+  ports:
+    - port: 8098
+      targetPort: 8098

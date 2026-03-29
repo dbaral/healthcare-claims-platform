@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: healthcare-claims
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+        - name: payment-service
+          image: healthcare/payment-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8096
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: PAYMENT_DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: PAYMENT_DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: PAYMENT_DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: PAYMENT_DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: PAYMENT_DB_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: healthcare-claims
+spec:
+  selector:
+    app: payment-service
+  ports:
+    - port: 8096
+      targetPort: 8096

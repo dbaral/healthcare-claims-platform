@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-postgres
+  namespace: healthcare-claims
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-postgres
+  template:
+    metadata:
+      labels:
+        app: payment-postgres
+    spec:
+      containers:
+        - name: payment-postgres
+          image: postgres:17
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: claims-platform-config
+                  key: PAYMENT_DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: PAYMENT_DB_USERNAME
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claims-platform-secret
+                  key: PAYMENT_DB_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-postgres
+  namespace: healthcare-claims
+spec:
+  selector:
+    app: payment-postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
