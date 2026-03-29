@@ -33,3 +33,9 @@ app:
       claim-validated: claim-validated
       member-eligible: member-eligible
       member-ineligible: member-ineligible
+
+logging:
+  file:
+    name: ${LOG_FILE_PATH:../../observability/logs/eligibility-service.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"

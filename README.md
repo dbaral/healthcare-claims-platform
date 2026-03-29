@@ -44,6 +44,26 @@ Start infrastructure:
 docker compose up -d zookeeper kafka kafka-ui claims-postgres claim-validation-postgres payment-postgres notification-postgres audit-postgres
 ```
 
+## MySQL Query Practice
+
+For a self-contained MySQL dataset built from the healthcare workflow, see [infrastructure/mysql-learning-lab/README.md](C:/dev/healthcare-platform/infrastructure/mysql-learning-lab/README.md).
+
+## Observability
+
+Prometheus, Grafana, and Datadog configuration now live under [observability/README.md](C:/dev/healthcare-platform/observability/README.md).
+
+Start Prometheus and Grafana:
+
+```powershell
+docker compose up -d prometheus grafana
+```
+
+Start Splunk:
+
+```powershell
+docker compose --profile splunk up -d splunk
+```
+
 Run services from IntelliJ in workflow order:
 
 1. `audit-service`

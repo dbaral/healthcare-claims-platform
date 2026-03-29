@@ -1,0 +1,22 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: healthcare-learning-mysql
+    environment:
+      MYSQL_DATABASE: healthcare_learning
+      MYSQL_USER: learner
+      MYSQL_PASSWORD: learnerpw
+      MYSQL_ROOT_PASSWORD: rootpw
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql-learning-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpw"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  mysql-learning-data:

@@ -41,3 +41,9 @@ app:
     topics:
       claim-adjudicated: claim-adjudicated
       payment-processed: payment-processed
+
+logging:
+  file:
+    name: ${LOG_FILE_PATH:../../observability/logs/payment-service.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"

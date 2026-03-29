@@ -32,3 +32,9 @@ app:
     topics:
       claim-fraud-cleared: claim-fraud-cleared
       claim-adjudicated: claim-adjudicated
+
+logging:
+  file:
+    name: ${LOG_FILE_PATH:../../observability/logs/adjudication-service.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"

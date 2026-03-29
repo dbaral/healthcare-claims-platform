@@ -1,0 +1,88 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - prometheus:9090
+        labels:
+          service: prometheus
+          env: local
+          platform: healthcare
+
+  - job_name: grafana
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - grafana:3000
+        labels:
+          service: grafana
+          env: local
+          platform: healthcare
+
+  - job_name: spring-actuator
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - host.docker.internal:8080
+        labels:
+          service: clinic-soap-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8081
+        labels:
+          service: patient-rest-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8091
+        labels:
+          service: claim-intake-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8092
+        labels:
+          service: claim-validation-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8093
+        labels:
+          service: eligibility-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8094
+        labels:
+          service: fraud-check-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8095
+        labels:
+          service: adjudication-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8096
+        labels:
+          service: payment-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8097
+        labels:
+          service: notification-service
+          env: local
+          platform: healthcare
+      - targets:
+          - host.docker.internal:8098
+        labels:
+          service: audit-service
+          env: local
+          platform: healthcare
