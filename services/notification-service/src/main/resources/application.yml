@@ -41,3 +41,9 @@ app:
       claim-fraud-flagged: claim-fraud-flagged
       claim-adjudicated: claim-adjudicated
       claim-notification-sent: claim-notification-sent
+
+logging:
+  file:
+    name: ${LOG_FILE_PATH:../../observability/logs/notification-service.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"

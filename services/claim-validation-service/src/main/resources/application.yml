@@ -54,3 +54,9 @@ app:
       claim-submitted: claim-submitted
       claim-validated: claim-validated
       claim-validation-failed: claim-validation-failed
+
+logging:
+  file:
+    name: ${LOG_FILE_PATH:../../observability/logs/claim-validation-service.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"

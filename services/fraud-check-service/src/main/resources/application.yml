@@ -33,3 +33,9 @@ app:
       member-eligible: member-eligible
       claim-fraud-cleared: claim-fraud-cleared
       claim-fraud-flagged: claim-fraud-flagged
+
+logging:
+  file:
+    name: ${LOG_FILE_PATH:../../observability/logs/fraud-check-service.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"

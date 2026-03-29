@@ -47,6 +47,26 @@ docker compose up -d zookeeper kafka kafka-ui claims-postgres claim-validation-p
 ## Infrastructure
 
 Deployment-oriented assets live under [infrastructure/README.md](C:/dev/healthcare-platform/infrastructure/README.md), including Docker build docs and starter Kubernetes manifests for the core claims workflow.
+## MySQL Query Practice
+
+For a self-contained MySQL dataset built from the healthcare workflow, see [infrastructure/mysql-learning-lab/README.md](C:/dev/healthcare-platform/infrastructure/mysql-learning-lab/README.md).
+
+## Observability
+
+Prometheus, Grafana, and Datadog configuration now live under [observability/README.md](C:/dev/healthcare-platform/observability/README.md).
+
+Start Prometheus and Grafana:
+
+```powershell
+docker compose up -d prometheus grafana
+```
+
+Start Splunk:
+
+```powershell
+docker compose --profile splunk up -d splunk
+```
+
 Run services from IntelliJ in workflow order:
 
 1. `audit-service`

@@ -43,3 +43,9 @@ app:
   kafka:
     topics:
       claim-submitted: claim-submitted
+
+logging:
+  file:
+    name: ${LOG_FILE_PATH:../../observability/logs/claim-intake-service.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
