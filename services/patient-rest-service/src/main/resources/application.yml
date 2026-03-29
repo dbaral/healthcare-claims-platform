@@ -38,3 +38,9 @@ management:
 app:
   kafka:
     topic: patient.events
+
+logging:
+  file:
+    name: ${LOG_FILE_PATH:../../observability/logs/patient-rest-service.log}
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"

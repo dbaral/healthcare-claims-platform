@@ -1,0 +1,159 @@
+init_config:
+
+instances:
+  - openmetrics_endpoint: http://host.docker.internal:8080/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "hikaricp_.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:clinic-soap-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8081/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "hikaricp_.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:patient-rest-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8091/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "hikaricp_.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:claim-intake-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8092/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "hikaricp_.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:claim-validation-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8093/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:eligibility-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8094/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:fraud-check-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8095/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:adjudication-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8096/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "hikaricp_.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:payment-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8097/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "hikaricp_.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:notification-service
+      - env:local
+      - platform:healthcare
+
+  - openmetrics_endpoint: http://host.docker.internal:8098/actuator/prometheus
+    namespace: healthcare_platform
+    metrics:
+      - "jvm_.*"
+      - "system_.*"
+      - "process_.*"
+      - "http_server_requests_seconds.*"
+      - "hikaricp_.*"
+      - "executor_.*"
+      - "kafka_.*"
+      - "tomcat_.*"
+    tags:
+      - service:audit-service
+      - env:local
+      - platform:healthcare

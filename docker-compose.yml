@@ -152,6 +152,73 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: healthcare-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: healthcare-grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_METRICS_ENABLED: "true"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+
+  datadog-agent:
+    profiles:
+      - datadog
+    image: registry.datadoghq.com/agent:7
+    container_name: healthcare-datadog-agent
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      DD_API_KEY: ${DD_API_KEY:-}
+      DD_SITE: ${DD_SITE:-datadoghq.com}
+      DD_ENV: ${DD_ENV:-local}
+      DD_LOG_LEVEL: INFO
+      DD_APM_ENABLED: "false"
+      DD_PROCESS_AGENT_ENABLED: "false"
+      DD_TAGS: "platform:healthcare project:healthcare-platform"
+    volumes:
+      - ./observability/datadog/conf.d/openmetrics.d/conf.yaml:/etc/datadog-agent/conf.d/openmetrics.d/conf.yaml:ro
+
+  splunk:
+    profiles:
+      - splunk
+    image: splunk/splunk:latest
+    container_name: healthcare-splunk
+    ports:
+      - "8000:8000"
+      - "8088:8088"
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_PASSWORD: ${SPLUNK_PASSWORD:-LocalSplunk123!}
+    volumes:
+      - ./observability/logs:/var/log/healthcare
+      - ./observability/splunk/apps/healthcare_logs:/opt/splunk/etc/apps/healthcare_logs:ro
+      - splunk-etc:/opt/splunk/etc
+      - splunk-var:/opt/splunk/var
+
 volumes:
   claims-postgres-data:
   claim-validation-postgres-data:
@@ -159,3 +226,7 @@ volumes:
   notification-postgres-data:
   audit-postgres-data:
   patient-mysql-data:
+  prometheus-data:
+  grafana-data:
+  splunk-etc:
+  splunk-var:
