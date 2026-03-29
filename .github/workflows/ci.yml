@@ -28,7 +28,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Detect relevant service changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            relevant:
+              - '${{ matrix.service }}/pom.xml'
+              - '${{ matrix.service }}/src/**'
+              - '.github/workflows/ci.yml'
+
       - name: Set up Java 17
+        if: steps.changes.outputs.relevant == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -36,5 +47,10 @@ jobs:
           cache: maven
 
       - name: Run Maven tests
+        if: steps.changes.outputs.relevant == 'true'
         working-directory: ${{ matrix.service }}
         run: mvn -B clean test
+
+      - name: Skip unchanged service
+        if: steps.changes.outputs.relevant != 'true'
+        run: echo "Skipping ${{ matrix.service }} because this pull request has no relevant application changes for that service."
